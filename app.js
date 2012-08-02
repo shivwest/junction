@@ -1,3 +1,4 @@
+// Utilities
 // from http://paulirish.com/2011/requestanimationframe-for-smart-animating/
 window.requestAnimFrame = (function(){
   return window.requestAnimationFrame       || 
@@ -10,28 +11,50 @@ window.requestAnimFrame = (function(){
     };
 })();
 
-var canvas = document.getElementById("canvas");
-var c = canvas.getContext("2d");
+function transform(x, min1, max1, min2, max2){
+  // normalizedX is between 0 and 1
+  var normalizedX = (x - min1) / (max1 - min1);
+  return normalizedX * (max2 - min2) + min2;
+}
 
-var numSegments = canvas.width;
+function sin(x){
+  return Math.sin(x);
+}
+
+function tan(x){
+  return Math.tan(x);
+}
+
+// Model
+var numSegments;
 
 var plotXMin = -10;
 var plotXMax = 10;
 var plotYMin = -10;
 var plotYMax = 10;
 
+var time = 0;
+
+var executeEquation;
+function setEquation(text){
+    var code = ["executeEquation = function(x){",
+    "  var y;",
+    text+";",
+    "  return y;",
+    "};"].join("\n");
+    eval(code);
+}
+
+setEquation("y = sin(x+time)");
+
+// View
+var canvas = document.getElementById("canvas");
+var c = canvas.getContext("2d");
+
 var screenXMin = 0;
 var screenXMax = canvas.width;
 var screenYMin = canvas.height;
 var screenYMax = 0;
-
-var time = 0;
-
-function transform(x, min1, max1, min2, max2){
-  // normalizedX is between 0 and 1
-  var normalizedX = (x - min1) / (max1 - min1);
-  return normalizedX * (max2 - min2) + min2;
-}
 
 function drawPlot(){
   c.clearRect(0, 0, canvas.width, canvas.height);
@@ -70,37 +93,18 @@ function drawPlot(){
   }
   c.stroke();
 }
-/*setInterval(function(){
-  time += 0.05;
-  drawPlot();
-},30);*/
+
+// Controller
+
+// Main App
+numSegments = canvas.width;
+
 (function animate(){
   requestAnimFrame(animate);
   time += 0.05;
   drawPlot();
 })();
 
-function sin(x){
-  return Math.sin(x);
-}
-
-function tan(x){
-  return Math.tan(x);
-}
-
-function executeEquation(x){
-  var y;
-  y = sin(x+time);
-  return y;
-}
-
 function plotButtonClicked(text){
-  var code = ["executeEquation = function(x){",
-   "  var y;",
-   text+";",
-   "  return y;",
-   "};"].join("\n");
-  
-  console.log(code);
-  eval(code);
+    setEquation(text);
 }
