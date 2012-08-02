@@ -6,3 +6,13 @@ var exampleModule = (function(){
         }
     };
 })();
+
+exampleModule.thePublicFunction();
+
+/**
+ * The old code, before the Module pattern
+ * 
+var x = 5;
+function speak(){
+    alert(x);
+}*/
