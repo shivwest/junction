@@ -53,7 +53,7 @@ var model = (function(){
 // Controller
 
 // Main App
-model.numSegments = canvas.width;
+model.numSegments = model.canvas.width;
 
 (function animate(){
   requestAnimFrame(animate);
